@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.example.fizzbuzzapp.ui.themes.FizzBuzzTheme
 import com.example.fizzbuzzapp.ui.viewmodels.FizzBuzzVM
 import com.example.fizzbuzzapp.ui.views.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -14,6 +15,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MainScreen() }
+        setContent { FizzBuzzTheme {  MainScreen() } }
     }
 }
