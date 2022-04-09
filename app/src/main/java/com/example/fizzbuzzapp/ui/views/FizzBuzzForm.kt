@@ -25,7 +25,10 @@ import com.example.fizzbuzzapp.ui.viewmodels.FizzBuzzVM
 
 @Composable
 fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
-    FizzBuzzForm(fizzBuzzVM) { navController.navigate("fizzBuzzList") }
+    FizzBuzzForm(fizzBuzzVM) {
+        fizzBuzzVM.onListReset()
+        navController.navigate("fizzBuzzList")
+    }
 }
 
 @Composable

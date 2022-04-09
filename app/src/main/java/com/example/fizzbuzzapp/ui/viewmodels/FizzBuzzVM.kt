@@ -21,6 +21,7 @@ class FizzBuzzVM @Inject constructor(
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
+    private var computedList: List<String> = emptyList()
 
     fun onDividerChanged(divider: TextFieldValue): String {
         val filteredValue = filterDividerValuesUseCase.execute(divider)
@@ -35,12 +36,19 @@ class FizzBuzzVM @Inject constructor(
     }
 
     fun onListDisplayed(): List<String> {
-        return computeFizzBuzzListUseCase.execute(
-            int1.value.text.toInt(),
-            int2.value.text.toInt(),
-            limit.value.text.toInt(),
-            str1.value.text,
-            str2.value.text
-        )
+        if (computedList.isEmpty()) {
+            computedList = computeFizzBuzzListUseCase.execute(
+                int1.value.text.toInt(),
+                int2.value.text.toInt(),
+                limit.value.text.toInt(),
+                str1.value.text,
+                str2.value.text
+            )
+        }
+        return computedList
+    }
+
+    fun onListReset() {
+        computedList = emptyList()
     }
 }
