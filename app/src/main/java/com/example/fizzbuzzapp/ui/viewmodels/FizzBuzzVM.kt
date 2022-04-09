@@ -41,6 +41,6 @@ class FizzBuzzVM @Inject constructor(
             limit.value.text.toInt(),
             str1.value.text,
             str2.value.text
-        ).split(",")
+        )
     }
 }
