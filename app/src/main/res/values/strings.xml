@@ -2,4 +2,5 @@
     <string name="app_name">FizzBuzzApp</string>
     <string name="fizz_buzz_form_title">Choose your variables wisely</string>
     <string name="fizz_buzz_form_validate">Validate</string>
+    <string name="fizz_buzz_list_title">Your generated list</string>
 </resources>

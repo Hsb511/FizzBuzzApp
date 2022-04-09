@@ -15,6 +15,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { FizzBuzzTheme {  MainScreen() } }
+        setContent { FizzBuzzTheme {  MainScreen(fizzBuzzVM) } }
     }
 }
