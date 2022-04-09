@@ -22,7 +22,7 @@ fun MainScreen(fizzBuzzVM: FizzBuzzVM) {
                 FizzBuzzForm(fizzBuzzVM, navController)
             }
             composable(route = "fizzBuzzList") {
-                FizzBuzzList(fizzBuzzVM)
+                FizzBuzzList(fizzBuzzVM,  navController)
             }
         }
     }

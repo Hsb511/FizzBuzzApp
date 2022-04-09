@@ -16,10 +16,9 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
 ): ViewModel() {
-
     val int1 = mutableStateOf(TextFieldValue("3"))
     val int2 = mutableStateOf(TextFieldValue("5"))
-    val limit = mutableStateOf(TextFieldValue("1023"))
+    val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
 
@@ -36,7 +35,6 @@ class FizzBuzzVM @Inject constructor(
     }
 
     fun onListDisplayed(): List<String> {
-        Log.d("FizzBuzzVM", "Request to display the fizzbuzz list")
         return computeFizzBuzzListUseCase.execute(
             int1.value.text.toInt(),
             int2.value.text.toInt(),
