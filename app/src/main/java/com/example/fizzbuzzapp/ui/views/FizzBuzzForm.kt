@@ -5,16 +5,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,15 +30,13 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
 
 @Composable
 fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
-    val int1 = remember { mutableStateOf(TextFieldValue("")) }
-    val int2 = remember { mutableStateOf(TextFieldValue("")) }
-    val limit = remember { mutableStateOf(TextFieldValue("")) }
-    val str1 = remember { mutableStateOf(TextFieldValue("")) }
-    val str2 = remember { mutableStateOf(TextFieldValue("")) }
-
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp, 24.dp, 8.dp, 8.dp)) {
+        // Fizzbuzz form's title
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(8.dp, 32.dp, 8.dp, 8.dp)
+        ) {
             Text(
                 text = stringResource(id = R.string.fizz_buzz_form_title),
                 style = MaterialTheme.typography.h5,
@@ -50,49 +47,58 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                     .fillMaxWidth()
             )
         }
+        // Form's first row with the two inputs for the dividers
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
-                    textFieldValue = int1,
+                    textFieldValue = fizzBuzzVM.int1,
                     label = "int1",
-                    onValueChange = { "" /*TODO*/ }
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) }
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
-                    textFieldValue = int2,
+                    textFieldValue = fizzBuzzVM.int2,
                     label = "int2",
-                    onValueChange = { "" /*TODO*/ }
-                )
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) })
             }
         }
+        // Form's second row with the input for the limit
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             FizzBuzzFormTextField(
-                textFieldValue = limit,
+                textFieldValue = fizzBuzzVM.limit,
                 label = "limit",
-                onValueChange = { "" /*TODO*/ }
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                onValueChange = { value -> fizzBuzzVM.onLimitChanged(value) }
             )
         }
+        // Form's third row with the input for the replacing strings
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
-                    textFieldValue = str1,
+                    textFieldValue = fizzBuzzVM.str1,
                     label = "str1",
-                    onValueChange = { "" /*TODO*/ }
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    onValueChange = { value -> value.text }
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
-                    textFieldValue = str2,
+                    textFieldValue = fizzBuzzVM.str2,
                     label = "str2",
-                    onValueChange = { "" /*TODO*/ }
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    onValueChange = { value -> value.text }
                 )
             }
         }
+        // Form's validation button that navigates to the second screen
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
             Button(
                 onClick = { onValidate() },
-                shape = RoundedCornerShape(32.dp)) {
+                shape = RoundedCornerShape(32.dp)
+            ) {
                 Text(
                     text = stringResource(id = R.string.fizz_buzz_form_validate),
                     textAlign = TextAlign.Center,

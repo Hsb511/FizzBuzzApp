@@ -2,8 +2,8 @@ package com.example.fizzbuzzapp.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 inline fun FizzBuzzFormTextField(
     textFieldValue: MutableState<TextFieldValue>,
     label: String,
+    keyboardOptions: KeyboardOptions,
     crossinline onValueChange: (textFieldValue: TextFieldValue) -> String
 ) {
     OutlinedTextField(
@@ -25,7 +26,9 @@ inline fun FizzBuzzFormTextField(
                 it.composition
             )
         },
+        keyboardOptions = keyboardOptions,
         label = { Text(label) },
+        colors = TextFieldDefaults.textFieldColors(textColor = MaterialTheme.colors.onSurface),
         singleLine = true,
         modifier = Modifier.fillMaxWidth().padding(8.dp)
     )
