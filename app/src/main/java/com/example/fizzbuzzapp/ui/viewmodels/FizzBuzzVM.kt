@@ -15,12 +15,13 @@ class FizzBuzzVM @Inject constructor(
     private val filterDividerValuesUseCase: FilterDividerValuesUseCase,
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
-): ViewModel() {
+) : ViewModel() {
     val int1 = mutableStateOf(TextFieldValue("3"))
     val int2 = mutableStateOf(TextFieldValue("5"))
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
+    var formIsValidated = mutableStateOf(true)
     private var computedList: List<String> = emptyList()
 
     fun onDividerChanged(divider: TextFieldValue): String {
@@ -51,4 +52,7 @@ class FizzBuzzVM @Inject constructor(
     fun onListReset() {
         computedList = emptyList()
     }
+
+    fun isFormValid() =
+        int1.value.text.isNotBlank() && int2.value.text.isNotBlank() && limit.value.text.isNotBlank()
 }

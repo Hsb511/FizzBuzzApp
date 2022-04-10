@@ -5,15 +5,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,11 +24,17 @@ import com.example.fizzbuzzapp.R
 import com.example.fizzbuzzapp.ui.components.FizzBuzzFormTextField
 import com.example.fizzbuzzapp.ui.viewmodels.FizzBuzzVM
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     FizzBuzzForm(fizzBuzzVM) {
-        fizzBuzzVM.onListReset()
-        navController.navigate("fizzBuzzList")
+        keyboardController?.hide()
+        if (fizzBuzzVM.isFormValid()) {
+            fizzBuzzVM.onListReset()
+            navController.navigate("fizzBuzzList")
+        }
     }
 }
 
@@ -56,7 +63,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.int1,
                     label = "int1",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isNumber = true,
                     onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) }
                 )
             }
@@ -64,7 +71,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.int2,
                     label = "int2",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    isNumber = true,
                     onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) })
             }
         }
@@ -73,7 +80,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
             FizzBuzzFormTextField(
                 textFieldValue = fizzBuzzVM.limit,
                 label = "limit",
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                isNumber = true,
                 onValueChange = { value -> fizzBuzzVM.onLimitChanged(value) }
             )
         }
@@ -83,7 +90,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.str1,
                     label = "str1",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    isNumber = false,
                     onValueChange = { value -> value.text }
                 )
             }
@@ -91,15 +98,17 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.str2,
                     label = "str2",
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    isNumber = false,
                     onValueChange = { value -> value.text }
                 )
             }
         }
         // Form's validation button that navigates to the second screen
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
+        Row(modifier = Modifier.padding(16.dp).weight(1f, true)) {
             Button(
-                onClick = { onValidate() },
+                onClick = {
+                    onValidate()
+                          },
                 shape = RoundedCornerShape(32.dp)
             ) {
                 Text(
@@ -108,6 +117,11 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(8.dp)
                 )
+            }
+        }
+        if (!fizzBuzzVM.isFormValid()) {
+            Snackbar {
+                Text(text = stringResource(id = R.string.fizz_buzz_form_invalid_message))
             }
         }
     }

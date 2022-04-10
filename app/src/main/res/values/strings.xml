@@ -2,6 +2,7 @@
     <string name="app_name">FizzBuzzApp</string>
     <string name="fizz_buzz_form_title">Choose your variables wisely</string>
     <string name="fizz_buzz_form_validate">Validate</string>
+    <string name="fizz_buzz_form_invalid_message">The form is invalid, at least one of the field is empty</string>
     <string name="fizz_buzz_list_title">Your generated list</string>
     <string name="fizz_buzz_list_return">Go back</string>
 </resources>
