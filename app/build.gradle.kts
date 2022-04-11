@@ -7,14 +7,18 @@ plugins {
 }
 
 android {
+    val technicalVersion = 1
+    val prodVersion = 0
+    val stagingVersion = 0
+
     compileSdk = 32
 
     defaultConfig {
         applicationId = "com.example.fizzbuzzapp"
         minSdk = 26
         targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = technicalVersion * 10000 + prodVersion * 100 + stagingVersion
+        versionName = "$technicalVersion.$prodVersion.$stagingVersion"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
