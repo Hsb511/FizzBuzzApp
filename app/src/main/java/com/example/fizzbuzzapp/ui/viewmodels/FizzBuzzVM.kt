@@ -21,7 +21,6 @@ class FizzBuzzVM @Inject constructor(
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
-    var formIsValidated = mutableStateOf(true)
     private var computedList: List<String> = emptyList()
 
     fun onDividerChanged(divider: TextFieldValue): String {

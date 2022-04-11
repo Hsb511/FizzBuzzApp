@@ -1,13 +1,19 @@
 package com.example.fizzbuzzapp.ui.views
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.fizzbuzzapp.R
 import com.example.fizzbuzzapp.ui.viewmodels.FizzBuzzVM
+import kotlinx.coroutines.launch
 
 @Composable
 fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
@@ -26,6 +33,9 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
 
 @Composable
 fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
+    val fizzBuzzListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +53,11 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
         }
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp).fillMaxWidth().weight(1f, false)
+            state = fizzBuzzListState,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+                .weight(1f, false)
         ) {
             items(fizzBuzzVM.onListDisplayed()) {
                 Text(
@@ -54,13 +68,30 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                 )
             }
         }
-        Row(modifier = Modifier.padding(16.dp)) {
-            Button(
+        Row(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+            OutlinedButton(
                 onClick = { onReturn() },
-                shape = RoundedCornerShape(32.dp)
+                shape = RoundedCornerShape(32.dp),
+                modifier = Modifier.weight(1f, true).padding(8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.fizz_buzz_list_return),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        fizzBuzzListState.animateScrollToItem(fizzBuzzVM.onListDisplayed().size)
+                    }
+                },
+                shape = RoundedCornerShape(32.dp),
+                modifier = Modifier.weight(1f, true).padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(id = R.string.fizz_buzz_list_scroll),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(8.dp)

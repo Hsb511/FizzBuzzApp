@@ -5,4 +5,5 @@
     <string name="fizz_buzz_form_invalid_message">The form is invalid, at least one of the field is empty</string>
     <string name="fizz_buzz_list_title">Your generated list</string>
     <string name="fizz_buzz_list_return">Go back</string>
+    <string name="fizz_buzz_list_scroll">Go down</string>
 </resources>
