@@ -33,7 +33,6 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
         keyboardController?.hide()
         if (fizzBuzzVM.isFormValid()) {
             fizzBuzzVM.onListReset()
-            fizzBuzzVM.onListDisplayed()
             navController.navigate("fizzBuzzList")
         }
     }

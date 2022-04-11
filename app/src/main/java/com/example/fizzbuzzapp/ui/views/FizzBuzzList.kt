@@ -45,24 +45,18 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                     .fillMaxWidth()
             )
         }
-        Box(contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(8.dp).fillMaxWidth().weight(1f, true)) {
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                state = fizzBuzzListState,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(fizzBuzzVM.computedList.value) {
-                    Text(
-                        text = it,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colors.onSurface,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-            if (fizzBuzzVM.computedList.value.isEmpty()) {
-                CircularProgressIndicator()
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            state = fizzBuzzListState,
+            modifier = Modifier.padding(8.dp).fillMaxWidth().weight(1f, true)
+        ) {
+            items(fizzBuzzVM.onListScrolled(fizzBuzzListState.firstVisibleItemIndex)) {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
         Row(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
