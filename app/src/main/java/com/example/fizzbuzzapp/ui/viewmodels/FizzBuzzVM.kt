@@ -1,6 +1,7 @@
 package com.example.fizzbuzzapp.ui.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
@@ -16,13 +17,14 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
 ) : ViewModel() {
-    private val step = 10000L
+    private val step = 100000L
     val int1 = mutableStateOf(TextFieldValue("3"))
     val int2 = mutableStateOf(TextFieldValue("5"))
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
-    val computedList = mutableStateOf(emptyList<String>())
+    private var computedList: MutableList<List<String>> = mutableListOf()
+    private val pageNumber = mutableStateOf(0)
 
     fun onDividerChanged(divider: TextFieldValue): String {
         val filteredValue = filterDividerValuesUseCase.execute(divider.text)
@@ -35,6 +37,9 @@ class FizzBuzzVM @Inject constructor(
         Log.d("FizzBuzzVM", "the value ${limit.text} has been filtered to : $filteredValue")
         return filteredValue
     }
+
+    fun isFormValid() =
+        int1.value.text.isNotBlank() && int2.value.text.isNotBlank() && limit.value.text.isNotBlank()
 
     private fun computeCurrentLimit(lastComputedIndex: Long = 1): Long {
         val currentLimit = limit.value.text.toLong()
@@ -49,28 +54,55 @@ class FizzBuzzVM @Inject constructor(
         }
     }
 
-    fun onListScrolled(firstVisibleIndex: Int): List<String> {
-        val lastComputedIndex = computedList.value.size.toLong()
-
-        if (lastComputedIndex - firstVisibleIndex < step || lastComputedIndex < limit.value.text.toLong()) {
-            computedList.value += computeFizzBuzzListUseCase.execute(
+    fun onListDisplayed() {
+        computedList.add(
+            computeFizzBuzzListUseCase.execute(
                 int1.value.text.toInt(),
                 int2.value.text.toInt(),
-                computeCurrentLimit(lastComputedIndex),
+                computeCurrentLimit(),
                 str1.value.text,
-                str2.value.text,
-                lastComputedIndex
+                str2.value.text
             )
-        }
-
-        return computedList.value
+        )
     }
 
+    private fun recomputeList() {
+        val currentListStart = (pageNumber.value) * step + 1
+        val currentList = computeFizzBuzzListUseCase.execute(
+            int1.value.text.toInt(),
+            int2.value.text.toInt(),
+            computeCurrentLimit(currentListStart),
+            str1.value.text,
+            str2.value.text,
+            currentListStart
+        )
+        if (pageNumber.value >= computedList.size) {
+            computedList.add(currentList)
+        } else {
+            computedList[pageNumber.value] = currentList
+        }
+    }
+
+    fun onPageUp() {
+        computedList[pageNumber.value] = emptyList()
+        pageNumber.value --
+        recomputeList()
+    }
+
+    fun onPageDown() {
+        computedList[pageNumber.value] = emptyList()
+        pageNumber.value ++
+        recomputeList()
+    }
+
+    fun getCurrentList() = computedList[pageNumber.value]
+
     fun onListReset() {
-        computedList.value = emptyList()
+        computedList = mutableListOf()
         Log.d("FizzBuzzVM", "The list has been reset")
     }
 
-    fun isFormValid() =
-        int1.value.text.isNotBlank() && int2.value.text.isNotBlank() && limit.value.text.isNotBlank()
+    fun isListStartNotDisplayed() = pageNumber.value != 0
+
+    fun isListEndNotDisplayed() = pageNumber.value < limit.value.text.toLong() / step
 }
