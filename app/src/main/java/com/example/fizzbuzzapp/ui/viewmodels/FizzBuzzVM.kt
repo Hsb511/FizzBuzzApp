@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fizzbuzzapp.domain.usecases.ComputeFizzBuzzListUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterDividerValuesUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterLimitValuesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +24,7 @@ class FizzBuzzVM @Inject constructor(
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
-    private var computedList: List<String> = emptyList()
+    var computedList = mutableStateOf(emptyList<String>())
 
     fun onDividerChanged(divider: TextFieldValue): String {
         val filteredValue = filterDividerValuesUseCase.execute(divider.text)
@@ -35,21 +38,24 @@ class FizzBuzzVM @Inject constructor(
         return filteredValue
     }
 
-    fun onListDisplayed(): List<String> {
-        if (computedList.isEmpty()) {
-            computedList = computeFizzBuzzListUseCase.execute(
-                int1.value.text.toInt(),
-                int2.value.text.toInt(),
-                limit.value.text.toLong(),
-                str1.value.text,
-                str2.value.text
-            )
+    fun onListDisplayed() {
+        if (computedList.value.isEmpty()) {
+            viewModelScope.launch(Dispatchers.Default) {
+                computedList.value = computeFizzBuzzListUseCase.execute(
+                    int1.value.text.toInt(),
+                    int2.value.text.toInt(),
+                    limit.value.text.toLong(),
+                    str1.value.text,
+                    str2.value.text
+                )
+                Log.d("FizzBuzzVM", "the list has been computed")
+            }
         }
-        return computedList
     }
 
     fun onListReset() {
-        computedList = emptyList()
+        computedList.value = emptyList()
+        Log.d("FizzBuzzVM", "The list has been reset")
     }
 
     fun isFormValid() =
