@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.fizzbuzzapp.domain.usecases.ComputeFizzBuzzListUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterDividerValuesUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterLimitValuesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,7 +16,7 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
 ) : ViewModel() {
-    private val step = 1000L
+    private val step = 10000L
     val int1 = mutableStateOf(TextFieldValue("3"))
     val int2 = mutableStateOf(TextFieldValue("5"))
     val limit = mutableStateOf(TextFieldValue("23"))
