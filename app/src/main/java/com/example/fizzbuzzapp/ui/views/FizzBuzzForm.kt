@@ -85,7 +85,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
             FizzBuzzFormTextField(
                 textFieldValue = fizzBuzzVM.limit,
-                label = "limit",
+                label = "limit: 0 -> 9 223 372 036 854 775 807",
                 isNumber = true,
                 onValueChange = { value -> fizzBuzzVM.onLimitChanged(value) }
             )

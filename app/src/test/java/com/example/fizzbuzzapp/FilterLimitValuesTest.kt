@@ -27,7 +27,12 @@ class FilterLimitValuesTest {
     }
 
     @Test
-    fun `when limit is 10000000000 output is 10000000000`() {
+    fun `when limit is 10 000 000 000 output is 10 000 000 000`() {
         assertEquals("10000000000", FilterLimitValuesUseCase().execute("10000000000"))
+    }
+
+    @Test
+    fun `when limit is 1 000 000 000 000 000 000 output is 1 000 000 000 000 000 000 000`() {
+        assertEquals("1000000000000000000", FilterLimitValuesUseCase().execute("1000000000000000000000"))
     }
 }
