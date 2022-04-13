@@ -68,7 +68,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.int1,
-                    label = "int1",
+                    label = "int1: 1 -> 2 147 483 647",
                     isNumber = true,
                     onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) }
                 )
@@ -76,7 +76,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), onValidate: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 FizzBuzzFormTextField(
                     textFieldValue = fizzBuzzVM.int2,
-                    label = "int2",
+                    label = "int2: 1 -> 2 147 483 647",
                     isNumber = true,
                     onValueChange = { value -> fizzBuzzVM.onDividerChanged(value) })
             }
