@@ -26,7 +26,7 @@ class FizzBuzzVM @Inject constructor(
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
     val computedList: MutableState<List<String>> = mutableStateOf(emptyList())
-    private val pageNumber = mutableStateOf(0)
+    private val pageNumber = mutableStateOf(0L)
 
     fun onDividerChanged(divider: TextFieldValue): String {
         val filteredValue = filterDividerValuesUseCase.execute(divider.text)
@@ -49,7 +49,7 @@ class FizzBuzzVM @Inject constructor(
             currentLimit
         } else {
             var amountBeforeLimit = currentLimit - lastComputedIndex
-            if (amountBeforeLimit > step ) {
+            if (amountBeforeLimit >= step ) {
                 amountBeforeLimit = step - 1
             }
             lastComputedIndex + amountBeforeLimit
@@ -80,7 +80,13 @@ class FizzBuzzVM @Inject constructor(
 
     fun onLastPage() {
         viewModelScope.launch {
-            pageNumber.value = kotlin.math.ceil((limit.value.text.toLong() / step).toDouble()).toInt()
+            val limit = limit.value.text.toLong()
+            if (limit % step == 0L) {
+                pageNumber.value = limit / step - 1
+            } else {
+                pageNumber.value = limit / step
+            }
+
             Log.d("FizzBuzzVM", "Scrolling to the last page ${pageNumber.value}")
             computeList()
         }
@@ -94,7 +100,7 @@ class FizzBuzzVM @Inject constructor(
         Log.d("FizzBuzzVM", "The list has been reset")
     }
 
-    fun isListStartNotDisplayed() = pageNumber.value != 0
+    fun isListStartNotDisplayed() = pageNumber.value != 0L
 
     fun isListEndNotDisplayed() = (pageNumber.value + 1) * step < limit.value.text.toLong()
 }
