@@ -1,14 +1,16 @@
 package com.example.fizzbuzzapp.ui.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fizzbuzzapp.domain.usecases.ComputeFizzBuzzListUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterDividerValuesUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterLimitValuesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,13 +19,13 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
 ) : ViewModel() {
-    private val step = 100000L
+    private val step = 1000L
     val int1 = mutableStateOf(TextFieldValue("3"))
     val int2 = mutableStateOf(TextFieldValue("5"))
     val limit = mutableStateOf(TextFieldValue("23"))
     val str1 = mutableStateOf(TextFieldValue("fizz"))
     val str2 = mutableStateOf(TextFieldValue("buzz"))
-    private var computedList: MutableList<List<String>> = mutableListOf()
+    val computedList: MutableState<List<String>> = mutableStateOf(emptyList())
     private val pageNumber = mutableStateOf(0)
 
     fun onDividerChanged(divider: TextFieldValue): String {
@@ -48,27 +50,15 @@ class FizzBuzzVM @Inject constructor(
         } else {
             var amountBeforeLimit = currentLimit - lastComputedIndex
             if (amountBeforeLimit > step ) {
-                amountBeforeLimit = step
+                amountBeforeLimit = step - 1
             }
             lastComputedIndex + amountBeforeLimit
         }
     }
 
-    fun onListDisplayed() {
-        computedList.add(
-            computeFizzBuzzListUseCase.execute(
-                int1.value.text.toInt(),
-                int2.value.text.toInt(),
-                computeCurrentLimit(),
-                str1.value.text,
-                str2.value.text
-            )
-        )
-    }
-
-    private fun recomputeList() {
+    fun computeList() {
         val currentListStart = (pageNumber.value) * step + 1
-        val currentList = computeFizzBuzzListUseCase.execute(
+        computedList.value = computeFizzBuzzListUseCase.execute(
             int1.value.text.toInt(),
             int2.value.text.toInt(),
             computeCurrentLimit(currentListStart),
@@ -76,33 +66,35 @@ class FizzBuzzVM @Inject constructor(
             str2.value.text,
             currentListStart
         )
-        if (pageNumber.value >= computedList.size) {
-            computedList.add(currentList)
-        } else {
-            computedList[pageNumber.value] = currentList
-        }
     }
 
     fun onPageUp() {
-        computedList[pageNumber.value] = emptyList()
         pageNumber.value --
-        recomputeList()
+        computeList()
     }
 
     fun onPageDown() {
-        computedList[pageNumber.value] = emptyList()
         pageNumber.value ++
-        recomputeList()
+        computeList()
     }
 
-    fun getCurrentList() = computedList[pageNumber.value]
+    fun onLastPage() {
+        viewModelScope.launch {
+            pageNumber.value = kotlin.math.ceil((limit.value.text.toLong() / step).toDouble()).toInt()
+            Log.d("FizzBuzzVM", "Scrolling to the last page ${pageNumber.value}")
+            computeList()
+        }
+    }
+
+    fun getCurrentList() = computedList.value
 
     fun onListReset() {
-        computedList = mutableListOf()
+        pageNumber.value = 0
+        computedList.value = mutableListOf()
         Log.d("FizzBuzzVM", "The list has been reset")
     }
 
     fun isListStartNotDisplayed() = pageNumber.value != 0
 
-    fun isListEndNotDisplayed() = pageNumber.value < limit.value.text.toLong() / step
+    fun isListEndNotDisplayed() = (pageNumber.value + 1) * step < limit.value.text.toLong()
 }
