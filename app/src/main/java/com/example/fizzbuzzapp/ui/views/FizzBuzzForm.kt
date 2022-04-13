@@ -10,6 +10,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -23,18 +24,22 @@ import androidx.navigation.NavHostController
 import com.example.fizzbuzzapp.R
 import com.example.fizzbuzzapp.ui.components.FizzBuzzFormTextField
 import com.example.fizzbuzzapp.ui.viewmodels.FizzBuzzVM
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
+    val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
 
     FizzBuzzForm(fizzBuzzVM) {
         keyboardController?.hide()
         if (fizzBuzzVM.isFormValid()) {
             fizzBuzzVM.onListReset()
-            fizzBuzzVM.computeList()
             navController.navigate("fizzBuzzList")
+            coroutineScope.launch {
+                fizzBuzzVM.computeList()
+            }
         }
     }
 }

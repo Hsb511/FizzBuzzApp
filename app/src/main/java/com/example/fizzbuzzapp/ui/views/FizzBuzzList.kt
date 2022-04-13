@@ -1,17 +1,11 @@
 package com.example.fizzbuzzapp.ui.views
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -51,48 +45,54 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                     .fillMaxWidth()
             )
         }
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            state = fizzBuzzListState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f, true)
-        ) {
-            if (fizzBuzzVM.isListStartNotDisplayed()) {
-                item {
-                    Button(
-                        onClick = {
-                            fizzBuzzVM.onPageUp()
-                            coroutineScope.launch {
-                                fizzBuzzListState.scrollToItem(fizzBuzzVM.getCurrentList().size)
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .weight(1f, false)) {
+            if (fizzBuzzVM.computedList.value.isEmpty()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else {
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    state = fizzBuzzListState,
+                    modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)
+                ) {
+                    if (fizzBuzzVM.isListStartNotDisplayed()) {
+                        item {
+                            Button(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        fizzBuzzVM.onPageUp()
+                                        fizzBuzzListState.scrollToItem(fizzBuzzVM.computedList.value.size)
+                                    }
+                                },
+                                shape = RoundedCornerShape(32.dp)
+                            ) {
+                                Text(text = "↑", style = MaterialTheme.typography.h5)
                             }
-                        },
-                        shape = RoundedCornerShape(32.dp)
-                    ) {
-                        Text(text = "↑", style = MaterialTheme.typography.h5)
+                        }
                     }
-                }
-            }
-            items(fizzBuzzVM.computedList.value) {
-                Text(
-                    text = it,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-            if (fizzBuzzVM.isListEndNotDisplayed()) {
-                item {
-                    Button(
-                        onClick = {
-                            fizzBuzzVM.onPageDown()
-                            coroutineScope.launch {
-                                fizzBuzzListState.scrollToItem(0)
+                    items(fizzBuzzVM.computedList.value) {
+                        Text(
+                            text = it,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                    if (fizzBuzzVM.isListEndNotDisplayed()) {
+                        item {
+                            Button(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        fizzBuzzVM.onPageDown()
+                                        fizzBuzzListState.scrollToItem(0)
+                                    }
+                                },
+                                shape = RoundedCornerShape(32.dp)
+                            ) {
+                                Text(text = "↓", style = MaterialTheme.typography.h5)
                             }
-                        },
-                        shape = RoundedCornerShape(32.dp)
-                    ) {
-                        Text(text = "↓", style = MaterialTheme.typography.h5)
+                        }
                     }
                 }
             }
@@ -118,9 +118,9 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
             }
             Button(
                 onClick = {
-                    fizzBuzzVM.onLastPage()
                     coroutineScope.launch {
-                        fizzBuzzListState.scrollToItem(fizzBuzzVM.getCurrentList().size)
+                        fizzBuzzVM.onLastPage()
+                        fizzBuzzListState.scrollToItem(fizzBuzzVM.computedList.value.size)
                     }
                 },
                 shape = RoundedCornerShape(32.dp),
