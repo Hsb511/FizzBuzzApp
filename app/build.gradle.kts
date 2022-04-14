@@ -64,7 +64,6 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["composeVersion"]}")
     implementation("androidx.compose.material:material:${rootProject.extra["composeVersion"]}")
     implementation("androidx.navigation:navigation-compose:2.4.1")
-    implementation("com.google.android.material:material:1.5.0")
     implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["composeVersion"]}")
 
     // Dagger Hilt
