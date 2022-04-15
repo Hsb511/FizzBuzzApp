@@ -1,6 +1,6 @@
 # FizzBuzzApp
 
-This fizz-buzz application was developed as part of an Android Kata for eXalt IT. 
+This fizz-buzz application was developed as part of an Android Kata for eXalt IT. The apk can be downloaded [here](previews/fizzbuzzapp_prod_1.0.0.apk)
 
 The main feature follows the [Fizz buzz game](https://en.wikipedia.org/wiki/Fizz_buzz).
 
@@ -23,7 +23,7 @@ The app follows an MVVM clean architecture (at least presentation and domain lay
 The main libraries used in this app are:
 - **[Jetpack compose](https://developer.android.com/jetpack/compose)** (version 1.2.0-alpha05): I chose compose to put into practice the theoritical learning I recently had. It also made it easy to write maintainable code and an intuitive UI that follows material guidelines.
 - **[Hilt](https://developer.android.com/training/dependency-injection/hilt-android)** (version 2.40.5): A library that allows depency injection, a requirement when working with clean architecture.
-- **[Android kotlin coroutines](https://developer.android.com/kotlin/coroutines)** (version 1.6.0): Coroutines are tools meant to ease asynchronous code development. The two main advantages are code simplification and performance improvement through lightweight and fewer memory leaks. Furthermore it isvery well integrated with Jetpack.
+- **[Android kotlin coroutines](https://developer.android.com/kotlin/coroutines)** (version 1.6.0): Coroutines are tools meant to ease asynchronous code development. The two main advantages are code simplification and performance improvement through lightweight and fewer memory leaks. Furthermore it is very well integrated with Jetpack.
 - **[JUnit](https://developer.android.com/training/testing/local-tests#test-class)** (version 4.13.2): JUnit is one of the most popular unit-testing framework.
 
 # Computation and performance
