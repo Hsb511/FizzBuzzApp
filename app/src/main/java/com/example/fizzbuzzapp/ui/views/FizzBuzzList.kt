@@ -2,6 +2,7 @@ package com.example.fizzbuzzapp.ui.views
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,13 +23,48 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
-    FizzBuzzList(fizzBuzzVM) { navController.navigate("fizzBuzzForm") }
+    val fizzBuzzListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    val computedList = fizzBuzzVM.computedList.value
+
+    FizzBuzzList(
+        computedList = computedList,
+        fizzBuzzListState = fizzBuzzListState,
+        onReturn = { navController.navigate("fizzBuzzForm") },
+        isListStartNotDisplayed = fizzBuzzVM.isListStartNotDisplayed(),
+        onPageUp = {
+            coroutineScope.launch {
+                fizzBuzzVM.onPageUp()
+                fizzBuzzListState.scrollToItem(computedList.size)
+            }
+        },
+        isListEndNotDisplayed = fizzBuzzVM.isListEndNotDisplayed(),
+        onPageDown = {
+            coroutineScope.launch {
+                fizzBuzzVM.onPageDown()
+                fizzBuzzListState.scrollToItem(0)
+            }
+        },
+        onLastPage = {
+            coroutineScope.launch {
+                fizzBuzzVM.onLastPage()
+                fizzBuzzListState.scrollToItem(computedList.size)
+            }
+        }
+    )
 }
 
 @Composable
-fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
-    val fizzBuzzListState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+fun FizzBuzzList(
+    computedList: List<String>,
+    fizzBuzzListState: LazyListState,
+    isListStartNotDisplayed: Boolean,
+    onPageUp: () -> Unit,
+    isListEndNotDisplayed: Boolean,
+    onPageDown: () -> Unit,
+    onReturn: () -> Unit,
+    onLastPage: () -> Unit
+) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -45,33 +81,32 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                     .fillMaxWidth()
             )
         }
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .weight(1f, false)) {
-            if (fizzBuzzVM.computedList.value.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f, false)
+        ) {
+            if (computedList.isEmpty()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
                 LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     state = fizzBuzzListState,
-                    modifier = Modifier.fillMaxSize().align(Alignment.TopCenter)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.TopCenter)
                 ) {
-                    if (fizzBuzzVM.isListStartNotDisplayed()) {
+                    if (isListStartNotDisplayed) {
                         item {
                             Button(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        fizzBuzzVM.onPageUp()
-                                        fizzBuzzListState.scrollToItem(fizzBuzzVM.computedList.value.size)
-                                    }
-                                },
+                                onClick = { onPageUp() },
                                 shape = RoundedCornerShape(32.dp)
                             ) {
                                 Text(text = "↑", style = MaterialTheme.typography.h5)
                             }
                         }
                     }
-                    items(fizzBuzzVM.computedList.value) {
+                    items(computedList) {
                         Text(
                             text = it,
                             textAlign = TextAlign.Center,
@@ -79,15 +114,10 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-                    if (fizzBuzzVM.isListEndNotDisplayed()) {
+                    if (isListEndNotDisplayed) {
                         item {
                             Button(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        fizzBuzzVM.onPageDown()
-                                        fizzBuzzListState.scrollToItem(0)
-                                    }
-                                },
+                                onClick = { onPageDown() },
                                 shape = RoundedCornerShape(32.dp)
                             ) {
                                 Text(text = "↓", style = MaterialTheme.typography.h5)
@@ -117,12 +147,7 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
                 )
             }
             Button(
-                onClick = {
-                    coroutineScope.launch {
-                        fizzBuzzVM.onLastPage()
-                        fizzBuzzListState.scrollToItem(fizzBuzzVM.computedList.value.size)
-                    }
-                },
+                onClick = { onLastPage() },
                 shape = RoundedCornerShape(32.dp),
                 modifier = Modifier
                     .weight(1f, true)
@@ -142,5 +167,13 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), onReturn: () -> Unit) {
 @Preview(showSystemUi = true)
 @Composable
 fun FizzBuzzListPreview() {
-    FizzBuzzList {}
+    FizzBuzzList(
+        computedList = (1..50).map { it.toString() },
+        fizzBuzzListState = rememberLazyListState(),
+        isListStartNotDisplayed = true,
+        onPageUp = {},
+        isListEndNotDisplayed = true,
+        onPageDown = {},
+        onReturn = {},
+        onLastPage = {})
 }
