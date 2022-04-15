@@ -107,4 +107,6 @@ class FizzBuzzVM @Inject constructor(
 
     fun isListEndNotDisplayed() = pageNumber.value != 0L &&
             (pageNumber.value + 1) * step < limit.value.text.toLong()
+
+    fun isListComputing() = computedList.value.isEmpty() == limit.value.text.toLong() > 0
 }

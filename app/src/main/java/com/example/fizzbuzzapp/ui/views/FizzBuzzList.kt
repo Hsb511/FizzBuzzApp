@@ -50,7 +50,8 @@ fun FizzBuzzList(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
                 fizzBuzzVM.onLastPage()
                 fizzBuzzListState.scrollToItem(computedList.size)
             }
-        }
+        },
+        isListComputing = fizzBuzzVM.isListComputing()
     )
 }
 
@@ -63,7 +64,8 @@ fun FizzBuzzList(
     isListEndNotDisplayed: Boolean,
     onPageDown: () -> Unit,
     onReturn: () -> Unit,
-    onLastPage: () -> Unit
+    onLastPage: () -> Unit,
+    isListComputing: Boolean
 ) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -86,7 +88,7 @@ fun FizzBuzzList(
                 .fillMaxSize()
                 .weight(1f, false)
         ) {
-            if (computedList.isEmpty()) {
+            if (isListComputing) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
                 LazyColumn(
@@ -175,5 +177,7 @@ fun FizzBuzzListPreview() {
         isListEndNotDisplayed = true,
         onPageDown = {},
         onReturn = {},
-        onLastPage = {})
+        onLastPage = {},
+        isListComputing = false,
+    )
 }
