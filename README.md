@@ -1,6 +1,6 @@
 # FizzBuzzApp
 
-This fizz-buzz application was developed as part of an Android Kata for eXalt IT. The apk can be downloaded [here](previews/fizzbuzzapp_prod_1.0.0.apk)
+This fizz-buzz application was developed as part of an Android Kata for eXalt IT. The apk can be downloaded [here](previews/fizzbuzzapp_release_1.0.0.apk)
 
 The main feature follows the [Fizz buzz game](https://en.wikipedia.org/wiki/Fizz_buzz).
 
