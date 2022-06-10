@@ -18,7 +18,7 @@ fun FizzBuzzTheme(
 
     MaterialTheme(
         colors = colors,
-        typography = Typography(),
+        typography = FizzBuzzTypography,
         shapes = FizzBuzzShapes,
         content = content
     )
