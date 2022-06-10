@@ -20,16 +20,28 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase,
     private val checkFormValidityUseCase: CheckFormValidityUseCase,
-    private val persistFormUseCase: PersistFormUseCase
+    private val persistFormUseCase: PersistFormUseCase,
+    private val retrieveLastFormUseCase: RetrieveLastFormUseCase
 ) : ViewModel() {
     private val step = 1000000L
-    val firstIntInput = mutableStateOf(TextFieldValue("3"))
-    val secondIntInput = mutableStateOf(TextFieldValue("5"))
-    val limitInput = mutableStateOf(TextFieldValue("23"))
-    val firstStringInput = mutableStateOf(TextFieldValue("fizz"))
-    val secondStringInput = mutableStateOf(TextFieldValue("buzz"))
+    lateinit var firstIntInput: MutableState<TextFieldValue>
+    lateinit var secondIntInput: MutableState<TextFieldValue>
+    lateinit var limitInput: MutableState<TextFieldValue>
+    lateinit var firstStringInput: MutableState<TextFieldValue>
+    lateinit var secondStringInput: MutableState<TextFieldValue>
     val computedList: MutableState<List<String>> = mutableStateOf(emptyList())
     private val pageNumber = mutableStateOf(0L)
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastForm = retrieveLastFormUseCase.execute()
+                firstIntInput = mutableStateOf(TextFieldValue(lastForm?.int1?.toString()?: "3"))
+                secondIntInput = mutableStateOf(TextFieldValue(lastForm?.int2?.toString()?: "5"))
+                limitInput = mutableStateOf(TextFieldValue(lastForm?.limit?.toString()?: "23"))
+                firstStringInput = mutableStateOf(TextFieldValue(lastForm?.str1?: "fizz"))
+                secondStringInput = mutableStateOf(TextFieldValue(lastForm?.str2?: "buzz"))
+        }
+    }
 
     fun onDividerChanged(divider: TextFieldValue): String {
         val filteredValue = filterDividerValuesUseCase.execute(divider.text)
