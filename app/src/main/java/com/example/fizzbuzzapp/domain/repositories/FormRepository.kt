@@ -4,5 +4,5 @@ import com.example.fizzbuzzapp.domain.models.FormModel
 
 interface FormRepository {
     suspend fun saveFormData(formModel: FormModel)
-    suspend fun retrieveFormData(): FormModel
+    suspend fun retrieveFormData(): FormModel?
 }
