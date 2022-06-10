@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Snackbar
@@ -131,14 +130,16 @@ fun FizzBuzzForm(
             }
         }
         // Form's validation button that navigates to the second screen
-        Row(modifier = Modifier
-            .padding(16.dp)
-            .weight(1f, true)) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .weight(1f, true)
+        ) {
             Button(
                 onClick = {
                     onValidate()
                 },
-                shape = RoundedCornerShape(32.dp)
+                shape = MaterialTheme.shapes.large
             ) {
                 Text(
                     text = stringResource(id = R.string.fizz_buzz_form_validate),
@@ -159,8 +160,8 @@ fun FizzBuzzForm(
 @Preview(showSystemUi = true)
 @Composable
 fun FizzBuzzFormPreview() {
-    FizzBuzzForm (
-        int1 = remember {mutableStateOf(TextFieldValue("3"))},
+    FizzBuzzForm(
+        int1 = remember { mutableStateOf(TextFieldValue("3")) },
         int2 = remember { mutableStateOf(TextFieldValue("5")) },
         limit = remember { mutableStateOf(TextFieldValue("23")) },
         str1 = remember { mutableStateOf(TextFieldValue("fizz")) },

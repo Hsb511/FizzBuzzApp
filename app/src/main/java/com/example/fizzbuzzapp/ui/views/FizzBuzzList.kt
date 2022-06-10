@@ -5,7 +5,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -102,7 +101,7 @@ fun FizzBuzzList(
                         item {
                             Button(
                                 onClick = { onPageUp() },
-                                shape = RoundedCornerShape(32.dp)
+                                shape = MaterialTheme.shapes.large
                             ) {
                                 Text(text = "↑", style = MaterialTheme.typography.h5)
                             }
@@ -120,7 +119,7 @@ fun FizzBuzzList(
                         item {
                             Button(
                                 onClick = { onPageDown() },
-                                shape = RoundedCornerShape(32.dp)
+                                shape = MaterialTheme.shapes.large
                             ) {
                                 Text(text = "↓", style = MaterialTheme.typography.h5)
                             }
@@ -136,7 +135,7 @@ fun FizzBuzzList(
         ) {
             OutlinedButton(
                 onClick = { onReturn() },
-                shape = RoundedCornerShape(32.dp),
+                shape = MaterialTheme.shapes.large,
                 modifier = Modifier
                     .weight(1f, true)
                     .padding(8.dp)
@@ -150,7 +149,7 @@ fun FizzBuzzList(
             }
             Button(
                 onClick = { onLastPage() },
-                shape = RoundedCornerShape(32.dp),
+                shape = MaterialTheme.shapes.large,
                 modifier = Modifier
                     .weight(1f, true)
                     .padding(8.dp)
