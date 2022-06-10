@@ -5,12 +5,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import com.example.fizzbuzzapp.domain.usecases.CheckFormValidityUseCase
-import com.example.fizzbuzzapp.domain.usecases.ComputeFizzBuzzListUseCase
-import com.example.fizzbuzzapp.domain.usecases.FilterDividerValuesUseCase
-import com.example.fizzbuzzapp.domain.usecases.FilterLimitValuesUseCase
+import androidx.lifecycle.viewModelScope
+import com.example.fizzbuzzapp.domain.models.FormModel
+import com.example.fizzbuzzapp.domain.usecases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -20,6 +20,7 @@ class FizzBuzzVM @Inject constructor(
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase,
     private val checkFormValidityUseCase: CheckFormValidityUseCase,
+    private val persistFormUseCase: PersistFormUseCase
 ) : ViewModel() {
     private val step = 1000000L
     val firstIntInput = mutableStateOf(TextFieldValue("3"))
@@ -73,6 +74,18 @@ class FizzBuzzVM @Inject constructor(
                 secondStringInput.value.text,
                 currentListStart
             )
+        }
+    }
+
+    fun persistData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            persistFormUseCase.execute(FormModel(
+                firstIntInput.value.text.toInt(),
+                secondIntInput.value.text.toInt(),
+                limitInput.value.text.toLong(),
+                firstStringInput.value.text,
+                secondStringInput.value.text,
+            ))
         }
     }
 

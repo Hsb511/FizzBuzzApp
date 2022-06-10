@@ -46,6 +46,7 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
                 navController.navigate("fizzBuzzList")
                 coroutineScope.launch {
                     fizzBuzzVM.computeList()
+                    fizzBuzzVM.persistData()
                 }
             }
         },
