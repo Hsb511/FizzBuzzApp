@@ -5,6 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import com.example.fizzbuzzapp.domain.usecases.CheckFormValidityUseCase
 import com.example.fizzbuzzapp.domain.usecases.ComputeFizzBuzzListUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterDividerValuesUseCase
 import com.example.fizzbuzzapp.domain.usecases.FilterLimitValuesUseCase
@@ -17,14 +18,15 @@ import javax.inject.Inject
 class FizzBuzzVM @Inject constructor(
     private val filterDividerValuesUseCase: FilterDividerValuesUseCase,
     private val filterLimitValuesUseCase: FilterLimitValuesUseCase,
-    private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase
+    private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase,
+    private val checkFormValidityUseCase: CheckFormValidityUseCase,
 ) : ViewModel() {
     private val step = 1000000L
-    val int1 = mutableStateOf(TextFieldValue("3"))
-    val int2 = mutableStateOf(TextFieldValue("5"))
-    val limit = mutableStateOf(TextFieldValue("23"))
-    val str1 = mutableStateOf(TextFieldValue("fizz"))
-    val str2 = mutableStateOf(TextFieldValue("buzz"))
+    val firstIntInput = mutableStateOf(TextFieldValue("3"))
+    val secondIntInput = mutableStateOf(TextFieldValue("5"))
+    val limitInput = mutableStateOf(TextFieldValue("23"))
+    val firstStringInput = mutableStateOf(TextFieldValue("fizz"))
+    val secondStringInput = mutableStateOf(TextFieldValue("buzz"))
     val computedList: MutableState<List<String>> = mutableStateOf(emptyList())
     private val pageNumber = mutableStateOf(0L)
 
@@ -40,11 +42,14 @@ class FizzBuzzVM @Inject constructor(
         return filteredValue
     }
 
-    fun isFormValid() =
-        int1.value.text.isNotBlank() && int2.value.text.isNotBlank() && limit.value.text.isNotBlank()
+    fun isFormValid() = checkFormValidityUseCase(
+        firstIntText = firstIntInput.value.text,
+        secondIntText = secondIntInput.value.text,
+        limitText = limitInput.value.text
+    )
 
     private fun computeCurrentLimit(lastComputedIndex: Long = 1): Long {
-        val currentLimit = limit.value.text.toLong()
+        val currentLimit = limitInput.value.text.toLong()
         return if (currentLimit < step) {
             currentLimit
         } else {
@@ -61,11 +66,11 @@ class FizzBuzzVM @Inject constructor(
         withContext(Dispatchers.Default) {
             val currentListStart = (pageNumber.value) * step + 1
             computedList.value = computeFizzBuzzListUseCase.execute(
-                int1.value.text.toInt(),
-                int2.value.text.toInt(),
+                firstIntInput.value.text.toInt(),
+                secondIntInput.value.text.toInt(),
                 computeCurrentLimit(currentListStart),
-                str1.value.text,
-                str2.value.text,
+                firstStringInput.value.text,
+                secondStringInput.value.text,
                 currentListStart
             )
         }
@@ -85,7 +90,7 @@ class FizzBuzzVM @Inject constructor(
 
     suspend fun onLastPage() {
         withContext(Dispatchers.Default) {
-            val limit = limit.value.text.toLong()
+            val limit = limitInput.value.text.toLong()
             if (limit % step == 0L) {
                 pageNumber.value = limit / step - 1
             } else {
@@ -106,7 +111,7 @@ class FizzBuzzVM @Inject constructor(
     fun isListStartNotDisplayed() = pageNumber.value != 0L
 
     fun isListEndNotDisplayed() = pageNumber.value != 0L &&
-            (pageNumber.value + 1) * step < limit.value.text.toLong()
+            (pageNumber.value + 1) * step < limitInput.value.text.toLong()
 
-    fun isListComputing() = computedList.value.isEmpty() == limit.value.text.toLong() > 0
+    fun isListComputing() = computedList.value.isEmpty() == limitInput.value.text.toLong() > 0
 }

@@ -33,11 +33,11 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
     val keyboardController = LocalSoftwareKeyboardController.current
 
     FizzBuzzForm(
-        int1 = fizzBuzzVM.int1,
-        int2 = fizzBuzzVM.int2,
-        limit = fizzBuzzVM.limit,
-        str1 = fizzBuzzVM.str1,
-        str2 = fizzBuzzVM.str2,
+        int1 = fizzBuzzVM.firstIntInput,
+        int2 = fizzBuzzVM.secondIntInput,
+        limit = fizzBuzzVM.limitInput,
+        str1 = fizzBuzzVM.firstStringInput,
+        str2 = fizzBuzzVM.secondStringInput,
         onDividerChanged = { divider -> fizzBuzzVM.onDividerChanged(divider) },
         onLimitChanged = { limit -> fizzBuzzVM.onLimitChanged(limit) },
         onValidate = {
