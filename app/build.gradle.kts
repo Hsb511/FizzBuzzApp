@@ -57,33 +57,38 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = rootProject.extra["composeVersion"] as String
+        kotlinCompilerExtensionVersion = Versions.COMPOSE
     }
 }
 
 dependencies {
     // Core libraries
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("com.google.android.material:material:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("com.google.android.material:material:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
     // Compose libraries
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-alpha05")
-    implementation("androidx.compose.compiler:compiler:${rootProject.extra["composeVersion"]}")
-    implementation("androidx.compose.ui:ui:${rootProject.extra["composeVersion"]}")
-    implementation("androidx.compose.ui:ui-viewbinding:${rootProject.extra["composeVersion"]}")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc01")
+    implementation("androidx.compose.compiler:compiler:${Versions.COMPOSE}")
+    implementation("androidx.compose.ui:ui:${Versions.COMPOSE}")
+    implementation("androidx.compose.ui:ui-viewbinding:${Versions.COMPOSE}")
     implementation("androidx.compose.ui:ui-tooling-preview:1.1.1")
-    implementation("androidx.compose.ui:ui-tooling:${rootProject.extra["composeVersion"]}")
-    implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["composeVersion"]}")
-    implementation("androidx.compose.material:material:${rootProject.extra["composeVersion"]}")
-    implementation("androidx.navigation:navigation-compose:2.4.1")
-    implementation("androidx.compose.runtime:runtime-livedata:${rootProject.extra["composeVersion"]}")
+    implementation("androidx.compose.ui:ui-tooling:${Versions.COMPOSE}")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.COMPOSE}")
+    implementation("androidx.compose.material:material:${Versions.COMPOSE}")
+    implementation("androidx.navigation:navigation-compose:2.4.2")
+    implementation("androidx.compose.runtime:runtime-livedata:${Versions.COMPOSE}")
 
     // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.40.5")
-    kapt("com.google.dagger:hilt-android-compiler:2.40.5")
+    implementation("com.google.dagger:hilt-android:${Versions.HILT}")
+    kapt("com.google.dagger:hilt-android-compiler:${Versions.HILT}")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    // Room
+    implementation("androidx.room:room-runtime:${Versions.ROOM}")
+    annotationProcessor("androidx.room:room-compiler:${Versions.ROOM}")
+    kapt("androidx.room:room-compiler:${Versions.ROOM}")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
