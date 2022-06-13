@@ -6,5 +6,5 @@ class CheckFormValidityUseCase @Inject constructor() {
     operator fun invoke(firstIntText: String?, secondIntText: String?, limitText: String?) =
         firstIntText?.toIntOrNull() != null &&
                 secondIntText?.toIntOrNull() != null &&
-                limitText?.toIntOrNull() != null
+                limitText?.toLongOrNull() != null
 }

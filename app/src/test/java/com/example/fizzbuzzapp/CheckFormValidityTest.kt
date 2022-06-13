@@ -41,4 +41,9 @@ class CheckFormValidityTest {
     fun `form is invalid when one value is string point`() {
         assertEquals(false, checkFormValidityUseCase(".", "3", "100"))
     }
+
+    @Test
+    fun `form is valid with long value for limit`() {
+        assertEquals(false, checkFormValidityUseCase(".", "3", "100000000000000"))
+    }
 }
