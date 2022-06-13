@@ -5,4 +5,9 @@
     <string name="fizz_buzz_list_title">Your generated list</string>
     <string name="fizz_buzz_list_return">Go back</string>
     <string name="fizz_buzz_list_scroll">Go down</string>
+    <string name="fizz_buzz_int1_label" translatable="false">int1: 1 -> 2 147 483 647</string>
+    <string name="fizz_buzz_int2_label" translatable="false">int2: 1 -> 2 147 483 647</string>
+    <string name="fizz_buzz_limit_label" translatable="false">limit: 0 -> 9 223 372 036 854 775 807</string>
+    <string name="fizz_buzz_str1_label" translatable="false">str1</string>
+    <string name="fizz_buzz_str2_label" translatable="false">str2</string>
 </resources>

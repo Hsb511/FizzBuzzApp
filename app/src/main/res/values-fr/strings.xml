@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">DIV1D</string>
     <string name="fizz_buzz_form_invalid_message">Le formulaire est invalide, au moins un des champs est vide</string>
     <string name="fizz_buzz_list_title">La liste générée</string>
     <string name="fizz_buzz_list_return">Retour</string>

@@ -113,7 +113,7 @@ fun FizzBuzzForm(
                 Column(modifier = Modifier.weight(1f)) {
                     FizzBuzzFormTextField(
                         textFieldValue = int1,
-                        label = "int1: 1 -> 2 147 483 647",
+                        label = stringResource(id = R.string.fizz_buzz_int1_label),
                         isNumber = true,
                         onValueChange = { value -> onDividerChanged(value) }
                     )
@@ -121,7 +121,7 @@ fun FizzBuzzForm(
                 Column(modifier = Modifier.weight(1f)) {
                     FizzBuzzFormTextField(
                         textFieldValue = int2,
-                        label = "int2: 1 -> 2 147 483 647",
+                        label = stringResource(id = R.string.fizz_buzz_int2_label),
                         isNumber = true,
                         onValueChange = { value -> onDividerChanged(value) })
                 }
@@ -130,7 +130,7 @@ fun FizzBuzzForm(
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
                 FizzBuzzFormTextField(
                     textFieldValue = limit,
-                    label = "limit: 0 -> 9 223 372 036 854 775 807",
+                    label = stringResource(id = R.string.fizz_buzz_limit_label),
                     isNumber = true,
                     onValueChange = { value -> onLimitChanged(value) }
                 )
@@ -140,7 +140,7 @@ fun FizzBuzzForm(
                 Column(modifier = Modifier.weight(1f)) {
                     FizzBuzzFormTextField(
                         textFieldValue = str1,
-                        label = "str1",
+                        label = stringResource(id = R.string.fizz_buzz_str1_label),
                         isNumber = false,
                         onValueChange = { value -> value.text }
                     )
@@ -148,7 +148,7 @@ fun FizzBuzzForm(
                 Column(modifier = Modifier.weight(1f)) {
                     FizzBuzzFormTextField(
                         textFieldValue = str2,
-                        label = "str2",
+                        label = stringResource(id = R.string.fizz_buzz_str2_label),
                         isNumber = false,
                         onValueChange = { value -> value.text }
                     )
