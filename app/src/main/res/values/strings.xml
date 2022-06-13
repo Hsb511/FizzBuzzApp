@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DIV1D</string>
+    <string name="app_name" translatable="false">DIV1D</string>
     <string name="fizz_buzz_form_title">Choose your variables wisely</string>
     <string name="fizz_buzz_form_validate">Validate</string>
     <string name="fizz_buzz_form_invalid_message">The form is invalid, at least one of the field is empty</string>

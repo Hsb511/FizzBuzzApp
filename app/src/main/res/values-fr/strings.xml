@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DIV1D</string>
+    <string name="fizz_buzz_form_validate">Valider</string>
+    <string name="fizz_buzz_form_invalid_message">Le formulaire est invalide, au moins un des champs est vide</string>
+    <string name="fizz_buzz_list_title">La liste générée</string>
+    <string name="fizz_buzz_list_return">Retour</string>
+    <string name="fizz_buzz_list_scroll">En bas</string>
+    <string name="fizz_buzz_form_title">Choisissez bien vos variables</string>
+</resources>
