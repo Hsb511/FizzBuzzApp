@@ -21,7 +21,8 @@ class FizzBuzzVM @Inject constructor(
     private val computeFizzBuzzListUseCase: ComputeFizzBuzzListUseCase,
     private val checkFormValidityUseCase: CheckFormValidityUseCase,
     private val persistFormUseCase: PersistFormUseCase,
-    private val retrieveLastFormUseCase: RetrieveLastFormUseCase
+    private val retrieveLastFormUseCase: RetrieveLastFormUseCase,
+    private val computeCurrentLimitUseCase: ComputeCurrentLimitUseCase
 ) : ViewModel() {
     private val step = 1000000L
     lateinit var firstIntInput: MutableState<TextFieldValue>
@@ -61,18 +62,8 @@ class FizzBuzzVM @Inject constructor(
         limitText = limitInput.value.text
     )
 
-    private fun computeCurrentLimit(lastComputedIndex: Long = 1): Long {
-        val currentLimit = limitInput.value.text.toLong()
-        return if (currentLimit < step) {
-            currentLimit
-        } else {
-            var amountBeforeLimit = currentLimit - lastComputedIndex
-            if (amountBeforeLimit >= step) {
-                amountBeforeLimit = step - 1
-            }
-            lastComputedIndex + amountBeforeLimit
-        }
-    }
+    private fun computeCurrentLimit(lastComputedIndex: Long = 1) =
+        computeCurrentLimitUseCase(limitInput.value.text, step, lastComputedIndex)
 
     suspend fun computeList() {
         computedList.value = emptyList()
