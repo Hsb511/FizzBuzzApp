@@ -4,10 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Snackbar
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -30,6 +29,8 @@ import kotlinx.coroutines.launch
 fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
     val keyboardController = LocalSoftwareKeyboardController.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val formInvalidErrorMessage = stringResource(id = R.string.fizz_buzz_form_invalid_message)
 
     FizzBuzzForm(
         int1 = fizzBuzzVM.firstIntInput,
@@ -48,9 +49,13 @@ fun FizzBuzzForm(fizzBuzzVM: FizzBuzzVM = viewModel(), navController: NavHostCon
                     fizzBuzzVM.computeList()
                     fizzBuzzVM.persistData()
                 }
+            } else {
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(formInvalidErrorMessage)
+                }
             }
         },
-        isFormValid = fizzBuzzVM.isFormValid()
+        snackbarHostState = snackbarHostState
     )
 
 }
@@ -65,94 +70,89 @@ fun FizzBuzzForm(
     onDividerChanged: (value: TextFieldValue) -> String,
     onLimitChanged: (value: TextFieldValue) -> String,
     onValidate: () -> Unit,
-    isFormValid: Boolean
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        // Fizzbuzz form's title
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(8.dp, 32.dp, 8.dp, 8.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.fizz_buzz_form_title),
-                style = MaterialTheme.typography.h5,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                    .padding(0.dp, 8.dp)
-                    .fillMaxWidth()
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onValidate() },
+                elevation = FloatingActionButtonDefaults.elevation(8.dp)
+            ) {
+                Icon(Icons.Filled.Done, "Done")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { Snackbar(it) }
             )
         }
-        // Form's first row with the two inputs for the dividers
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                FizzBuzzFormTextField(
-                    textFieldValue = int1,
-                    label = "int1: 1 -> 2 147 483 647",
-                    isNumber = true,
-                    onValueChange = { value -> onDividerChanged(value) }
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                FizzBuzzFormTextField(
-                    textFieldValue = int2,
-                    label = "int2: 1 -> 2 147 483 647",
-                    isNumber = true,
-                    onValueChange = { value -> onDividerChanged(value) })
-            }
-        }
-        // Form's second row with the input for the limit
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            FizzBuzzFormTextField(
-                textFieldValue = limit,
-                label = "limit: 0 -> 9 223 372 036 854 775 807",
-                isNumber = true,
-                onValueChange = { value -> onLimitChanged(value) }
-            )
-        }
-        // Form's third row with the input for the replacing strings
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                FizzBuzzFormTextField(
-                    textFieldValue = str1,
-                    label = "str1",
-                    isNumber = false,
-                    onValueChange = { value -> value.text }
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                FizzBuzzFormTextField(
-                    textFieldValue = str2,
-                    label = "str2",
-                    isNumber = false,
-                    onValueChange = { value -> value.text }
-                )
-            }
-        }
-        // Form's validation button that navigates to the second screen
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .weight(1f, true)
+    ) { padding ->
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(padding)
         ) {
-            Button(
-                onClick = {
-                    onValidate()
-                },
-                shape = MaterialTheme.shapes.large
+            // Fizzbuzz form's title
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(8.dp, 32.dp, 8.dp, 8.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.fizz_buzz_form_validate),
+                    text = stringResource(id = R.string.fizz_buzz_form_title),
+                    style = MaterialTheme.typography.h5,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h6,
-                    modifier = Modifier.padding(8.dp)
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .padding(0.dp, 8.dp)
+                        .fillMaxWidth()
                 )
             }
-        }
-        if (!isFormValid) {
-            Snackbar {
-                Text(text = stringResource(id = R.string.fizz_buzz_form_invalid_message))
+            // Form's first row with the two inputs for the dividers
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+                Column(modifier = Modifier.weight(1f)) {
+                    FizzBuzzFormTextField(
+                        textFieldValue = int1,
+                        label = "int1: 1 -> 2 147 483 647",
+                        isNumber = true,
+                        onValueChange = { value -> onDividerChanged(value) }
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    FizzBuzzFormTextField(
+                        textFieldValue = int2,
+                        label = "int2: 1 -> 2 147 483 647",
+                        isNumber = true,
+                        onValueChange = { value -> onDividerChanged(value) })
+                }
+            }
+            // Form's second row with the input for the limit
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+                FizzBuzzFormTextField(
+                    textFieldValue = limit,
+                    label = "limit: 0 -> 9 223 372 036 854 775 807",
+                    isNumber = true,
+                    onValueChange = { value -> onLimitChanged(value) }
+                )
+            }
+            // Form's third row with the input for the replacing strings
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+                Column(modifier = Modifier.weight(1f)) {
+                    FizzBuzzFormTextField(
+                        textFieldValue = str1,
+                        label = "str1",
+                        isNumber = false,
+                        onValueChange = { value -> value.text }
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    FizzBuzzFormTextField(
+                        textFieldValue = str2,
+                        label = "str2",
+                        isNumber = false,
+                        onValueChange = { value -> value.text }
+                    )
+                }
             }
         }
     }
@@ -169,7 +169,6 @@ fun FizzBuzzFormPreview() {
         str2 = remember { mutableStateOf(TextFieldValue("buzz")) },
         onDividerChanged = { "" },
         onLimitChanged = { "" },
-        onValidate = {},
-        isFormValid = true
+        onValidate = {}
     )
 }

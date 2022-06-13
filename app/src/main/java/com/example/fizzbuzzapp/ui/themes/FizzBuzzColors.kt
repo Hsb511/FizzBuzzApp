@@ -9,24 +9,24 @@ val Turquoise = Color(0xFF1EDDCD)
 val Olivine = Color(0xFFA9D18E)
 val IndianRed = Color(0xFFE15A58)
 val MiddleRedPurple = Color(0xFF994B47)
-val SandyBrown = Color(0xFFF4A259)
-val GoldCrayola = Color(0xFFEDC298)
 val CharCoal = Color(0xFF033334)
 
 val FizzBuzzLightColors = lightColors(
     primary = Olivine,
     primaryVariant = Turquoise,
-    secondary = SandyBrown,
+    secondary = Olivine,
     secondaryVariant = MiddleRedPurple,
-    onPrimary = Color.White
+    onPrimary = CharCoal,
+    onSecondary = CharCoal,
 )
 
 val FizzBuzzDarkColors = darkColors(
     primary = Olivine,
     primaryVariant = Turquoise,
-    secondary = GoldCrayola,
+    secondary = Olivine,
     secondaryVariant = IndianRed,
     background = CharCoal,
     surface = CharCoal,
-    onPrimary = Color.Black
+    onPrimary = CharCoal,
+    onSecondary = CharCoal,
 )
