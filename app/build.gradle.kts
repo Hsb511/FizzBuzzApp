@@ -8,7 +8,7 @@ plugins {
 
 android {
     val technicalVersion = 1
-    val prodVersion = 0
+    val prodVersion = 1
     val stagingVersion = 0
 
     compileSdk = 32
