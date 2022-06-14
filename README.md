@@ -1,6 +1,6 @@
-# FizzBuzzApp
+# ![logo](https://github.com/Hsb511/FizzBuzzApp/blob/main/app/src/main/res/mipmap-mdpi/ic_launcher_round.png) DIV1D  
 
-This fizz-buzz application was developed as part of an Android Kata for eXalt IT. The apk can be downloaded [here](previews/fizzbuzzapp_release_1.0.0.apk)
+This fizz-buzz application was developed as part of an Android Kata for eXalt IT. The apk can be downloaded [here](https://github.com/Hsb511/FizzBuzzApp/releases/download/1.1.0/fizzbuzzapp_release_1.1.0.apk)
 
 The main feature follows the [Fizz buzz game](https://en.wikipedia.org/wiki/Fizz_buzz).
 
