@@ -18,7 +18,7 @@ The current version of the application is [1.1.0](https://github.com/Hsb511/Fizz
 
 # Technical stack
 
-The app follows an MVVM clean architecture (at least presentation and domain layers). 
+The app follows an MVVM clean architecture with 3 main layers : UI (presentation), domain and data. 
 
 The main libraries used in this app are:
 - **[Jetpack compose](https://developer.android.com/jetpack/compose)** (version 1.2.0-beta03): I chose compose to put into practice the theoritical learning I recently had. It also made it easy to write maintainable code and an intuitive UI that follows material guidelines.
